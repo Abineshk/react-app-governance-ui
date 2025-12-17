@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+.recharts-legend-item-text {
+  color: #000 !important;
+}
+
+/* custom scroll bar */
+.scroll-bar {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--color-sky-500) #f0f0f0 !important;
+}
+
+@theme {
+  /* ───────────────────────────────
+     GRADIENTS (Bank)
+  ─────────────────────────────── */
+
+  --color-primary: #0049ac;
+  --color-secondary: #0395d3;
+
+  --color-gradient-primary-start: #0049ac;
+  --color-gradient-primary-end: #0395d3;
+
+  --color-backdrop-primary: #f5f5f5;
+
+  /* Header */
+  --color-border-default: var(--color-blue-100);
+
+  --color-profile-gradient-start: #0049ac;
+  --color-profile-gradient-end: #0395d3;
+
+  --color-profile-border: var(--color-gray-300);
+  --color-profile-hover: #f2f6fc;
+
+  /* ───────────────────────────────
+     ICONS
+  ─────────────────────────────── */
+  --color-icon-primary: #0049ac;
+  --color-icon-secondary: #0395d3;
+}
