@@ -1,18 +1,18 @@
-import { useState } from "react";
+import React from "react";
 import { SeverityChart } from "../charts/SeverityChart";
 import { StatusBarChart } from "../charts/StatusBarChart";
-import { TrendLineChart } from "../charts/TrendLineChart";
 import { AiInsights } from "../components/AiInsights";
 import { AlertsIssues } from "../components/AlertsIssues";
 import { Issues } from "../components/Issues";
 import ChartContainer from "../components/reusable/ChartContainer";
 import { StatCard } from "../components/StatCard";
+import { TicketsTrendOverview } from "../components/TicketsTrendOverview";
 
 const stats = [
   {
     title: "Total",
     count: 248,
-    gradient: "from-blue-400 to-blue-600",
+    gradient: "from-[#1e3a8a] to-[#1e40af]", // Navy blue - trustworthy
     icon: "📊",
     percentageChange: 12.5,
     isIncrease: true,
@@ -20,7 +20,7 @@ const stats = [
   {
     title: "Open",
     count: 42,
-    gradient: "from-cyan-400 to-cyan-600",
+    gradient: "from-[#0891b2] to-[#0e7490]", // Teal - professional
     icon: "📬",
     percentageChange: 8.3,
     isIncrease: true,
@@ -28,7 +28,7 @@ const stats = [
   {
     title: "Closed",
     count: 156,
-    gradient: "from-green-400 to-green-600",
+    gradient: "from-[#059669] to-[#047857]", // Emerald green - success
     icon: "✅",
     percentageChange: 15.2,
     isIncrease: true,
@@ -36,7 +36,7 @@ const stats = [
   {
     title: "In Progress",
     count: 28,
-    gradient: "from-orange-400 to-orange-600",
+    gradient: "from-[#4f46e5] to-[#4338ca]", // Indigo - in progress
     icon: "⚙️",
     percentageChange: 5.7,
     isIncrease: false,
@@ -44,7 +44,7 @@ const stats = [
   {
     title: "Pending",
     count: 15,
-    gradient: "from-yellow-400 to-yellow-600",
+    gradient: "from-[#d97706] to-[#b45309]", // Amber - attention
     icon: "⏳",
     percentageChange: 3.2,
     isIncrease: false,
@@ -52,97 +52,49 @@ const stats = [
   {
     title: "Waiting for Evidence",
     count: 7,
-    gradient: "from-purple-400 to-purple-600",
+    gradient: "from-[#7c3aed] to-[#6d28d9]", // Purple - waiting
     icon: "🔍",
     percentageChange: 2.1,
     isIncrease: true,
   },
 ];
 
-const weekTicketData = [
-  { date: "10/12", opened: 24, closed: 18, backlog: 6 },
-  { date: "11/12", opened: 30, closed: 22, backlog: 10 },
-  { date: "13/12", opened: 18, closed: 26, backlog: 15 },
-  { date: "14/12", opened: 35, closed: 20, backlog: 8 },
-  { date: "15/12", opened: 28, closed: 30, backlog: 12 },
-  { date: "16/12", opened: 14, closed: 10, backlog: 20 },
-  { date: "17/12", opened: 20, closed: 16, backlog: 10 },
+// Ticket Type Data - 7 Days
+const ticketTypeData7Days = [
+  { name: "Bug", value: 30, fill: "#dc2626" },
+  { name: "Security", value: 20, fill: "#d97706" },
+  { name: "Service request", value: 28, fill: "#0891b2" },
+  { name: "Performance", value: 22, fill: "#4f46e5" },
 ];
 
-const monthTicketData = [
-  { date: "01/12", opened: 22, closed: 18, backlog: 8 },
-  { date: "02/12", opened: 26, closed: 20, backlog: 10 },
-  { date: "03/12", opened: 30, closed: 22, backlog: 12 },
-  { date: "04/12", opened: 28, closed: 24, backlog: 14 },
-  { date: "05/12", opened: 35, closed: 26, backlog: 18 },
-  { date: "06/12", opened: 18, closed: 15, backlog: 20 },
-  { date: "07/12", opened: 20, closed: 18, backlog: 22 },
-
-  { date: "08/12", opened: 24, closed: 20, backlog: 24 },
-  { date: "09/12", opened: 27, closed: 22, backlog: 26 },
-  { date: "10/12", opened: 32, closed: 24, backlog: 28 },
-  { date: "11/12", opened: 30, closed: 26, backlog: 30 },
-  { date: "12/12", opened: 25, closed: 28, backlog: 27 },
-  { date: "13/12", opened: 22, closed: 24, backlog: 25 },
-  { date: "14/12", opened: 18, closed: 20, backlog: 23 },
-
-  { date: "15/12", opened: 20, closed: 18, backlog: 25 },
-  { date: "16/12", opened: 26, closed: 22, backlog: 27 },
-  { date: "17/12", opened: 28, closed: 24, backlog: 29 },
-  { date: "18/12", opened: 34, closed: 26, backlog: 32 },
-  { date: "19/12", opened: 36, closed: 28, backlog: 34 },
-  { date: "20/12", opened: 30, closed: 30, backlog: 34 },
-  { date: "21/12", opened: 22, closed: 24, backlog: 32 },
-
-  { date: "22/12", opened: 24, closed: 22, backlog: 34 },
-  { date: "23/12", opened: 28, closed: 24, backlog: 36 },
-  { date: "24/12", opened: 32, closed: 26, backlog: 38 },
-  { date: "25/12", opened: 20, closed: 18, backlog: 40 },
-  { date: "26/12", opened: 26, closed: 22, backlog: 42 },
-  { date: "27/12", opened: 30, closed: 24, backlog: 44 },
-  { date: "28/12", opened: 34, closed: 26, backlog: 46 },
-  { date: "29/12", opened: 28, closed: 30, backlog: 44 },
-  { date: "30/12", opened: 22, closed: 26, backlog: 40 },
+// Ticket Type Data - 30 Days
+const ticketTypeData30Days = [
+  { name: "Bug", value: 35, fill: "#dc2626" },
+  { name: "Security", value: 25, fill: "#d97706" },
+  { name: "Service request", value: 25, fill: "#0891b2" },
+  { name: "Performance", value: 30, fill: "#4f46e5" },
 ];
 
-const weeklyData = [
-  { name: "Opened", value: 169 },
-  { name: "Closed", value: 142 },
-  { name: "Backlog", value: 133 },
+// Severity Data - 7 Days
+const severityData7Days = [
+  { name: "Critical", value: 10, fill: "#dc2626" },
+  { name: "High", value: 22, fill: "#ea580c" },
+  { name: "Medium", value: 38, fill: "#d97706" },
+  { name: "Low", value: 30, fill: "#059669" },
 ];
 
-const ticketTypeData = [
-  {
-    name: "Bug",
-    value: 35,
-    fill: "#fd5c63", // light red
-  },
-  {
-    name: "Security",
-    value: 25,
-    fill: "#fbbf24", // pending / amber
-  },
-  {
-    name: "Service request",
-    value: 25,
-    fill: "#338fd9", // light blue
-  },
-  {
-    name: "Performance",
-    value: 15,
-    fill: "#bf8bff", // violet
-  },
-];
-
-const severityData = [
-  { name: "Critical", value: 12, fill: "#ef4444" }, // red
-  { name: "High", value: 24, fill: "#f97316" }, // orange
-  { name: "Medium", value: 36, fill: "#facc15" }, // yellow
-  { name: "Low", value: 18, fill: "#22c55e" }, // green
+// Severity Data - 30 Days
+const severityData30Days = [
+  { name: "Critical", value: 15, fill: "#dc2626" },
+  { name: "High", value: 27, fill: "#ea580c" },
+  { name: "Medium", value: 35, fill: "#d97706" },
+  { name: "Low", value: 23, fill: "#059669" },
 ];
 
 export const Dashboard = () => {
-  const [selectedTrend, setSelectedTrend] = useState(7);
+  const [priorityTimeRange, setPriorityTimeRange] = React.useState(7);
+  const [categoryTimeRange, setCategoryTimeRange] = React.useState(7);
+
   return (
     <div className="py-4">
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6 gap-2">
@@ -150,56 +102,124 @@ export const Dashboard = () => {
           <StatCard key={stat.title} {...stat} />
         ))}
       </div>
-      <div className="mt-4">
-        <ChartContainer
-          title="Tickets Trend Overview"
-          actions={
-            <div className="flex gap-2">
-              <button
-                className={`px-3 py-1 rounded-md text-sm font-mediu transition cursor-pointer ${
-                  selectedTrend === 7
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-                onClick={() => setSelectedTrend(7)}
-              >
-                Last 7 Days
-              </button>
-              <button
-                className={`px-3 py-1 rounded-md text-sm font-mediu transition cursor-pointer ${
-                  selectedTrend === 30
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-                onClick={() => setSelectedTrend(30)}
-              >
-                Last 30 Days
-              </button>
+      <TicketsTrendOverview />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div className="h-full">
+          <ChartContainer
+            title="Tickets By Priority"
+            subtitle={`Showing data for last ${priorityTimeRange} days`}
+            actions={
+              <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+                <button
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    priorityTimeRange === 7
+                      ? "bg-white text-[#1e40af] shadow-sm"
+                      : "text-gray-600 hover:text-[#1e40af]"
+                  }`}
+                  onClick={() => setPriorityTimeRange(7)}
+                >
+                  7D
+                </button>
+                <button
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    priorityTimeRange === 30
+                      ? "bg-white text-[#1e40af] shadow-sm"
+                      : "text-gray-600 hover:text-[#1e40af]"
+                  }`}
+                  onClick={() => setPriorityTimeRange(30)}
+                >
+                  30D
+                </button>
+              </div>
+            }
+          >
+            <SeverityChart 
+              severityData={priorityTimeRange === 7 ? severityData7Days : severityData30Days} 
+            />
+            <div className="mt-auto pt-3 border-t border-gray-200">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">
+                  {priorityTimeRange === 7
+                    ? "Critical tickets decreased by"
+                    : "High priority tickets increased by"}
+                </span>
+                <span
+                  className={`flex items-center gap-1 font-semibold ${
+                    priorityTimeRange === 7 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {priorityTimeRange === 7 ? "↓ 8.5%" : "↑ 12.3%"}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                {priorityTimeRange === 7
+                  ? "Improved response time contributing to reduction"
+                  : "Increased workload from new security audit"}
+              </p>
             </div>
-          }
-        >
-          <TrendLineChart
-            ticketData={selectedTrend === 30 ? monthTicketData : weekTicketData}
-          />
-        </ChartContainer>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 h-80">
-        <div className="bg-white rounded-xl p-4 shadow">
+          </ChartContainer>
+        </div>
+        <div className="h-full">
+          <ChartContainer
+            title="Tickets By Category"
+            subtitle={`Showing data for last ${categoryTimeRange} days`}
+            actions={
+              <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+                <button
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    categoryTimeRange === 7
+                      ? "bg-white text-[#1e40af] shadow-sm"
+                      : "text-gray-600 hover:text-[#1e40af]"
+                  }`}
+                  onClick={() => setCategoryTimeRange(7)}
+                >
+                  7D
+                </button>
+                <button
+                  className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    categoryTimeRange === 30
+                      ? "bg-white text-[#1e40af] shadow-sm"
+                      : "text-gray-600 hover:text-[#1e40af]"
+                  }`}
+                  onClick={() => setCategoryTimeRange(30)}
+                >
+                  30D
+                </button>
+              </div>
+            }
+          >
+            <StatusBarChart 
+              data={categoryTimeRange === 7 ? ticketTypeData7Days : ticketTypeData30Days} 
+            />
+            <div className="mt-auto pt-3 border-t border-gray-200">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">
+                  {categoryTimeRange === 7
+                    ? "Bug reports trending down"
+                    : "Service requests increased"}
+                </span>
+                <span
+                  className={`flex items-center gap-1 font-semibold ${
+                    categoryTimeRange === 7 ? "text-green-600" : "text-blue-600"
+                  }`}
+                >
+                  {categoryTimeRange === 7 ? "↓ 15.2%" : "↑ 24.7%"}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                {categoryTimeRange === 7
+                  ? "Recent bug fixes showing positive impact"
+                  : "New feature rollout driving support requests"}
+              </p>
+            </div>
+          </ChartContainer>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow h-full">
           <AlertsIssues />
-        </div>
-        <div>
-          <ChartContainer title="Tickets By Priority">
-            <SeverityChart severityData={severityData} />
-          </ChartContainer>
-        </div>
-        <div>
-          <ChartContainer title="Tickets By Category">
-            <StatusBarChart data={ticketTypeData} />
-          </ChartContainer>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 mt-4 h-95">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div className="bg-white rounded-xl p-4 shadow">
           <AiInsights />
         </div>

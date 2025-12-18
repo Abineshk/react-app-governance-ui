@@ -42,7 +42,7 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 15, right: 10, left: 10, bottom: 20 }}
+          margin={{ top: 15, right: 45, left: 10, bottom: 20 }}
         >
           <XAxis type="number" hide />
           <YAxis type="category" dataKey="name" hide />
@@ -60,27 +60,45 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
               <Cell key={index} fill={item.fill} />
             ))}
             {/* <LabelList position="center" fill="#fff" fontSize={12} /> */}
-            {/* Name inside bar (left) */}
+            {/* Name inside bar (left) with improved truncation */}
             <LabelList
               dataKey="name"
               content={(props) => {
-                const { x = 0, y = 0, height = 0, value } = props as any;
+                const { x = 0, y = 0, width = 0, height = 0, value } = props as any;
+                
+                // Use less padding to maximize space for text
+                const availableWidth = width - 10; 
+                const charWidth = 8.5; // Refined estimate
+                const maxChars = Math.floor(availableWidth / charWidth);
+                
+                let displayName = value;
+                if (value.length > maxChars) {
+                  if (maxChars >= 4) {
+                    displayName = value.substring(0, maxChars - 3) + "...";
+                  } else if (maxChars >= 2) {
+                    displayName = value.substring(0, 1) + "..";
+                  } else {
+                    // Still too small to show anything meaningful
+                    return null;
+                  }
+                }
+
                 return (
                   <text
-                    x={x + 12}
+                    x={x + 8}
                     y={y + height / 2}
                     fill="#ffffff"
-                    fontSize={15}
+                    fontSize={14}
                     fontWeight={500}
                     dominantBaseline="middle"
                   >
-                    {value}
+                    {displayName}
                   </text>
                 );
               }}
             />
 
-            {/* Value + % at end of bar */}
+            {/* Value + % outside at end of bar */}
             <LabelList
               dataKey="value"
               content={(props) => {
@@ -93,12 +111,12 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
                 } = props as any;
                 return (
                   <text
-                    x={x + width - 12}
+                    x={x + width + 8}
                     y={y + height / 2}
-                    fill="#ffffff"
+                    fill="#4b5563"
                     fontSize={15}
                     fontWeight={600}
-                    textAnchor="end"
+                    textAnchor="start"
                     dominantBaseline="middle"
                   >
                     {value}%
@@ -114,3 +132,4 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
 };
 
 export { StatusBarChart };
+

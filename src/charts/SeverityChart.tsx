@@ -20,8 +20,8 @@ export const SeverityChart = ({ severityData }: any) => {
             nameKey="name"
             cx="50%"
             cy="50%"
-            innerRadius={70}
-            outerRadius={100}
+            innerRadius={60}
+            outerRadius={90}
             paddingAngle={3}
             isAnimationActive={visible}
             animationDuration={5000}
