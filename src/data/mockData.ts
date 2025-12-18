@@ -44,7 +44,7 @@ export const mockTickets: Ticket[] = [
   { id: '1', title: 'Critical Security Breach', category: 'category1', type: 'security', owner: 'owner1', priority: 'Critical', status: 'Open', date: new Date().toISOString() },
   { id: '2', title: 'IIM Delivery Performance Issue', category: 'iimDelivery', type: 'performance', owner: 'owner2', priority: 'High', status: 'In Progress', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
   { id: '3', title: 'Data Inconsistency', category: 'category2', type: 'bug', owner: 'owner2', priority: 'Medium', status: 'Closed', date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() },
-  ...generateTickets(3000, 30) // Increased to 3000 tickets for significantly higher volume
+  ...generateTickets(3000, 90) // Increased to 3000 tickets for significantly higher volume, covering 90 days.
 ];
 
 export interface Alert {

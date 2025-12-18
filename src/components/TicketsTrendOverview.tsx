@@ -6,18 +6,20 @@ import { Ticket } from "../data/mockData";
 import ChartContainer from "./reusable/ChartContainer";
 
 interface TicketsTrendOverviewProps {
-  timeline: number;
+  minDays: number;
+  maxDays: number;
   tickets: Ticket[];
 }
 
-export const TicketsTrendOverview = ({ timeline, tickets }: TicketsTrendOverviewProps) => {
+export const TicketsTrendOverview = ({ minDays, maxDays, tickets }: TicketsTrendOverviewProps) => {
   const [chartType, setChartType] = useState<"area" | "line" | "bar">("area");
 
   const filteredTrendData = useMemo(() => {
     const data: any[] = [];
     const now = new Date();
 
-    for (let i = timeline - 1; i >= 0; i--) {
+    // Iterate from maxDays (oldest) to minDays (newest)
+    for (let i = maxDays; i >= minDays; i--) {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dateString = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
 
@@ -45,13 +47,13 @@ export const TicketsTrendOverview = ({ timeline, tickets }: TicketsTrendOverview
     }
 
     return data;
-  }, [timeline, tickets]);
+  }, [minDays, maxDays, tickets]);
 
   return (
     <div className="mt-3">
       <ChartContainer
         title="Tickets Trend Overview"
-        subtitle={`Showing data for last ${timeline} days`}
+        subtitle={`Showing data for last ${maxDays} days`}
         actions={
           <div className="flex gap-3">
             {/* Chart Type Selection */}

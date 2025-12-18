@@ -17,12 +17,12 @@ export const Dashboard = () => {
   // Filtered Tickets
   const filteredTickets = useMemo(() => {
     const now = new Date();
-    const days = parseInt(timeline);
-    const timelineLimit = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+    const days = parseInt(timeline) || 7;
+    const limit = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
 
     return mockTickets.filter((ticket) => {
       const ticketDate = new Date(ticket.date);
-      const matchesTimeline = ticketDate >= timelineLimit;
+      const matchesTimeline = ticketDate >= limit;
       const matchesCategory = category === "all" || ticket.category === category;
       const matchesOwner = owner === "all" || ticket.owner === owner;
       return matchesTimeline && matchesCategory && matchesOwner;
@@ -108,14 +108,16 @@ export const Dashboard = () => {
     });
   }, [category, owner]);
 
-  const timelineDays = parseInt(timeline);
+  const numDays = parseInt(timeline) || 7;
+  const minDays = 1;
+  const maxDays = numDays;
 
   return (
     <div className="py-3">
-      <div className="bg-white rounded-xl p-4 shadow mb-3 flex flex-wrap justify-between">
-        <div className="mb-5">
-          <h1 className="mb-2 text-2xl font-medium text-gray-800">Ticket Assignment Dashboard</h1>
-          <p className="text-gray-600">Monitor and manage your support tickets</p>
+      <div className="bg-white rounded-xl p-4 shadow mb-3 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <h1 className="mb-1 text-2xl font-medium text-gray-800">Ticket Assignment Dashboard</h1>
+          <p className="text-gray-600 text-sm">Monitor and manage your support tickets</p>
         </div>
         <DashboardFilters
           category={category}
@@ -131,7 +133,7 @@ export const Dashboard = () => {
           <StatCard key={stat.title} {...stat} />
         ))}
       </div>
-      <TicketsTrendOverview timeline={timelineDays} tickets={filteredTickets} />
+      <TicketsTrendOverview minDays={minDays} maxDays={maxDays} tickets={filteredTickets} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-3">
         <div className="bg-white rounded-xl p-4 shadow h-full">
           <AlertsIssues alerts={filteredAlerts} />
@@ -139,25 +141,25 @@ export const Dashboard = () => {
         <div className="h-full">
           <ChartContainer
             title="Tickets By Priority"
-            subtitle={`Showing data for last ${timelineDays} days`}
+            subtitle={`Showing data for last ${numDays} days`}
           >
             <SeverityChart severityData={severityData} />
             <div className="mt-auto pt-3 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">
-                  {timelineDays === 7
+                  {numDays <= 7
                     ? "Critical tickets decreased by"
                     : "High priority tickets increased by"}
                 </span>
                 <span
-                  className={`flex items-center gap-1 font-semibold ${timelineDays === 7 ? "text-green-600" : "text-red-600"
+                  className={`flex items-center gap-1 font-semibold ${numDays <= 7 ? "text-green-600" : "text-red-600"
                     }`}
                 >
-                  {timelineDays === 7 ? "↓ 8.5%" : "↑ 12.3%"}
+                  {numDays <= 7 ? "↓ 8.5%" : "↑ 12.3%"}
                 </span>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {timelineDays === 7
+                {numDays <= 7
                   ? "Improved response time contributing to reduction"
                   : "Increased workload from new security audit"}
               </p>
@@ -167,25 +169,25 @@ export const Dashboard = () => {
         <div className="h-full">
           <ChartContainer
             title="Tickets By Category"
-            subtitle={`Showing data for last ${timelineDays} days`}
+            subtitle={`Showing data for last ${numDays} days`}
           >
             <StatusBarChart data={categoryData} />
             <div className="mt-auto pt-3 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-gray-600">
-                  {timelineDays === 7
+                  {numDays <= 7
                     ? "Bug reports trending down"
                     : "Service requests increased"}
                 </span>
                 <span
-                  className={`flex items-center gap-1 font-semibold ${timelineDays === 7 ? "text-green-600" : "text-blue-600"
+                  className={`flex items-center gap-1 font-semibold ${numDays <= 7 ? "text-green-600" : "text-blue-600"
                     }`}
                 >
-                  {timelineDays === 7 ? "↓ 15.2%" : "↑ 24.7%"}
+                  {numDays <= 7 ? "↓ 15.2%" : "↑ 24.7%"}
                 </span>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                {timelineDays === 7
+                {numDays <= 7
                   ? "Recent bug fixes showing positive impact"
                   : "New feature rollout driving support requests"}
               </p>
