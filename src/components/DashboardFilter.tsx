@@ -39,7 +39,7 @@ export function DashboardFilters({
     ];
 
     return (
-        <div className="flex gap-4 flex-nowrap items-end flex-grow justify-end">
+        <div className="flex gap-4 flex-wrap lg:items-end flex-grow lg:justify-end">
             <CustomSelect
                 label="Category"
                 options={categoryOptions}
