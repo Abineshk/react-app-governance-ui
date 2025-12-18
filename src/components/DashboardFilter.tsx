@@ -1,4 +1,6 @@
+import { Calendar, Clock, TrendingUp } from 'lucide-react';
 import { CustomSelect } from './reusable/CustomSelect';
+import { TimelineButtonGroup } from './TimeLineButtonGroup';
 
 interface DashboardFiltersProps {
     category: string;
@@ -31,8 +33,9 @@ export function DashboardFilters({
     ];
 
     const timelineOptions = [
-        { value: '7', label: 'Last 7 Days' },
-        { value: '30', label: 'Last 30 Days' },
+        { value: '7', label: '7D', icon: Clock },
+        { value: '30', label: '30D', icon: Calendar },
+        { value: '90', label: '90D', icon: TrendingUp },
     ];
 
     return (
@@ -51,12 +54,15 @@ export function DashboardFilters({
                 onChange={setOwner}
             />
 
-            <CustomSelect
+            {/* <CustomSelect
                 label="Timeline"
                 options={timelineOptions}
                 value={timeline}
                 onChange={setTimeline}
-            />
+            /> */}
+
+            <TimelineButtonGroup timeLineOptions={timelineOptions} value={timeline} onChange={(days) => setTimeline(days.toString())} />
+
         </div>
     );
 }
