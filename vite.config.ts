@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base:"/react-app-governance-ui/",
   build: {
     target: "esnext",
     outDir: "build",
