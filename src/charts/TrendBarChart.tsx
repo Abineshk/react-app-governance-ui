@@ -1,18 +1,21 @@
 import {
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Legend,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
+import { useChartVisible } from "../hooks/useChartVisible";
 
 export const TrendBarChart = ({ ticketData }: any) => {
+  const { ref, count } = useChartVisible(0.4);
+
   return (
-    <div className="h-60 w-full">
-      <ResponsiveContainer>
+    <div className="h-50 w-full" ref={ref}>
+      <ResponsiveContainer key={count}>
         <BarChart
           data={ticketData}
           margin={{ top: 16, right: 16, bottom: 8, left: 16 }}

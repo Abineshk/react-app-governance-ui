@@ -2,7 +2,7 @@ import { Container } from "../reusable/Container";
 
 export const Footer = () => {
   return (
-    <footer className="fixed bottom-0 left-0 w-full bg-linear-to-r from-gradient-primary-start to-gradient-primary-end text-white py-4 shadow-lg">
+    <footer className="w-full bg-linear-to-r from-gradient-primary-start to-gradient-primary-end text-white py-4 shadow-lg">
       <Container className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
         {/* Footer Text */}
         <p className="text-md text-center md:text-left">

@@ -21,7 +21,7 @@ interface StatusBarChartProps {
 }
 
 const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
-  const { ref, visible } = useChartVisible(0.4);
+  const { ref, visible, count } = useChartVisible(0.4);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
@@ -37,8 +37,8 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="h-60  relative" ref={ref}>
-      <ResponsiveContainer>
+    <div className="h-60 relative" ref={ref}>
+      <ResponsiveContainer key={count}>
         <BarChart
           data={data}
           layout="vertical"
@@ -53,7 +53,7 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
             dataKey="value"
             barSize={30}
             radius={[0, 10, 10, 0]}
-            isAnimationActive={visible} // enable animation
+            isAnimationActive={true}
             animationDuration={5000}
           >
             {data.map((item, index) => (
@@ -65,12 +65,12 @@ const StatusBarChart: React.FC<StatusBarChartProps> = ({ data }) => {
               dataKey="name"
               content={(props) => {
                 const { x = 0, y = 0, width = 0, height = 0, value } = props as any;
-                
+
                 // Use less padding to maximize space for text
-                const availableWidth = width - 10; 
+                const availableWidth = width - 10;
                 const charWidth = 8.5; // Refined estimate
                 const maxChars = Math.floor(availableWidth / charWidth);
-                
+
                 let displayName = value;
                 if (value.length > maxChars) {
                   if (maxChars >= 4) {

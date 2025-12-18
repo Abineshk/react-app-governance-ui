@@ -9,10 +9,11 @@ import {
 import { useChartVisible } from "../hooks/useChartVisible";
 
 export const SeverityChart = ({ severityData }: any) => {
-  const { ref, visible } = useChartVisible(0.4);
+  const { ref, visible, count } = useChartVisible(0.4);
+
   return (
-    <div className="h-60  relative" ref={ref}>
-      <ResponsiveContainer width="100%" height={240}>
+    <div className="h-60 relative mt-2" ref={ref}>
+      <ResponsiveContainer key={count} width="100%" height={240}>
         <PieChart>
           <Pie
             data={severityData}
@@ -23,7 +24,7 @@ export const SeverityChart = ({ severityData }: any) => {
             innerRadius={60}
             outerRadius={90}
             paddingAngle={3}
-            isAnimationActive={visible}
+            isAnimationActive={true}
             animationDuration={5000}
           >
             {severityData.map((entry: any, index: number) => (

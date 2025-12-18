@@ -5,7 +5,7 @@ import { Dashboard } from "./pages/Dashboard";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-backdrop-primary pb-[50px] font-sans">
+    <div className="min-h-screen bg-backdrop-primary font-sans">
       <Header />
       <Container>
         <Dashboard />
