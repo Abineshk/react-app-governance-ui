@@ -36,7 +36,7 @@ const StatCard: React.FC<StatCardProps> = ({
 
         {percentageChange !== undefined && (
           <div
-            className={`flex items-center gap-2 px-1.5 py-0.5 rounded-xl text-sm font-semibold
+            className={`flex items-center gap-1 px-1.5 py-0.5 rounded-xl text-sm font-semibold
           bg-white backdrop-blur
           ${isIncrease ? "text-green-600" : "text-red-600"}`}
           >
@@ -50,3 +50,4 @@ const StatCard: React.FC<StatCardProps> = ({
 };
 
 export { StatCard };
+

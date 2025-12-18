@@ -10,7 +10,7 @@ export const Footer = () => {
         </p>
 
         {/* Links */}
-        <div className="flex space-x-4 text-md">
+        <div className="flex space-x-4 text-md md:block hidden">
           <a href="#" className="hover:text-gray-200 transition">
             Privacy
           </a>
